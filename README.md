@@ -1,2 +1,2 @@
 # nickel
-A minimal budget tracker, backed by your Google Sheet.
+A minimal web app for tracking monthly budgets.
