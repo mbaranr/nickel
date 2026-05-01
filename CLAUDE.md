@@ -12,7 +12,7 @@ A minimal Next.js budget tracker backed by a Google Sheet.
 
 Four tabs:
 
-- `Setup`: declared income, taxes, fixed expenses, subscriptions, variable budget caps, plus one `savings_rate` row (percent of net income).
+- `Setup`: declared income, taxes, fixed expenses (recurring bills and subscriptions), variable budget caps, plus one `savings_rate` row (percent of net income).
 - `Outflows`: one row per expense (date, category, amount, note).
 - `Inflows`: one row per unexpected income event (gifts, bonuses, etc.).
 - `Savings`: one row per savings transfer; positive amount = contribution, negative = withdrawal.
@@ -33,7 +33,7 @@ CSV templates with the exact column layout live in `sheet-template/`.
 
 ```
 disposable = income + this_month_inflows
-           - tax - fixed - subscriptions
+           - tax - fixed
            - max(variable_budget, variable_spent)
            - max(savings_target, savings_actual_this_month)
 ```

@@ -4,7 +4,7 @@ A minimal web app for tracking monthly budgets.
 
 ## What it does
 
-- Declares income, taxes, fixed expenses, subscriptions, and per-category variable budgets in one Setup tab on your Google Sheet.
+- Declares income, taxes, fixed expenses (recurring bills, subscriptions), and per-category variable budgets in one Setup tab on your Google Sheet.
 - Tracks outflows (expenses) per category, inflows (gifts, bonuses), and savings transfers (contributions and withdrawals) as you go.
 - Computes a single "disposable" headline number for the month, plus per-category remaining and cumulative savings.
 - Lets you scroll back to read-only past months.
@@ -23,8 +23,7 @@ In `Setup`, declare:
 
 - `income` rows (e.g. salary).
 - `tax` rows.
-- `fixed` rows (insurance, phone, etc.).
-- `subscription` rows.
+- `fixed` rows (recurring bills like insurance, phone, subscriptions).
 - `variable` rows (one per spending category, with monthly cap).
 - One `savings_rate` row: amount is the percent of net income you want to save each month.
 

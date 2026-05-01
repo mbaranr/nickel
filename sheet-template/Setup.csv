@@ -3,8 +3,8 @@ income,Salary,5000,
 tax,Income tax,1200,
 fixed,Health insurance,180,
 fixed,Phone,35,
-subscription,iCloud,3,
-subscription,Spotify,11,
+fixed,iCloud,3,
+fixed,Spotify,11,
 variable,Groceries,400,monthly budget
 variable,Leisure,200,monthly budget
 variable,Miscellaneous,150,monthly budget

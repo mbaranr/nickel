@@ -5,7 +5,6 @@ export type SetupType =
   | "income"
   | "tax"
   | "fixed"
-  | "subscription"
   | "variable"
   | "savings_rate";
 
@@ -54,7 +53,6 @@ const VALID_TYPES: ReadonlySet<string> = new Set([
   "income",
   "tax",
   "fixed",
-  "subscription",
   "variable",
   "savings_rate",
 ]);

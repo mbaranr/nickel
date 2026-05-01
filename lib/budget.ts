@@ -18,7 +18,6 @@ export type BudgetSummary = {
   inflowsThisMonth: number;
   taxes: number;
   fixed: number;
-  subscriptions: number;
   variableBudgetTotal: number;
   variableSpentTotal: number;
   variableOverage: number;
@@ -64,7 +63,6 @@ export function summarize(
   const income = sumByType("income");
   const taxes = sumByType("tax");
   const fixed = sumByType("fixed");
-  const subscriptions = sumByType("subscription");
 
   const savingsRatePct =
     setup.find((r) => r.type === "savings_rate")?.amount ?? 0;
@@ -127,7 +125,6 @@ export function summarize(
     inflowsThisMonth -
     taxes -
     fixed -
-    subscriptions -
     Math.max(variableBudgetTotal, variableSpentTotal) -
     Math.max(savingsTargetThisMonth, savingsActualThisMonth);
 
@@ -136,7 +133,6 @@ export function summarize(
     inflowsThisMonth,
     taxes,
     fixed,
-    subscriptions,
     variableBudgetTotal,
     variableSpentTotal,
     variableOverage,

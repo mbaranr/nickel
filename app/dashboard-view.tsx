@@ -89,8 +89,7 @@ export function DashboardView({
           )}{" "}
           − Tax {CURRENCY}
           {formatMoney(summary.taxes)} − Fixed {CURRENCY}
-          {formatMoney(summary.fixed)} − Subs {CURRENCY}
-          {formatMoney(summary.subscriptions)} − Variable {CURRENCY}
+          {formatMoney(summary.fixed)} − Variable {CURRENCY}
           {formatMoney(
             Math.max(summary.variableBudgetTotal, summary.variableSpentTotal),
           )}
