@@ -149,9 +149,8 @@ export function summarize(
 }
 
 export function formatMoney(n: number): string {
-  return n.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
+  return Math.round(n).toLocaleString(undefined, {
+    maximumFractionDigits: 0,
   });
 }
 
