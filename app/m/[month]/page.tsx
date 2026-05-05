@@ -6,6 +6,7 @@ import {
   getSetup,
 } from "@/lib/sheets";
 import { currentMonthKey, summarize } from "@/lib/budget";
+import { requireUser } from "@/lib/auth";
 import { DashboardView } from "../../dashboard-view";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +18,7 @@ export default async function MonthPage({
 }: {
   params: Promise<{ month: string }>;
 }) {
+  const { username, currency } = await requireUser();
   const { month } = await params;
   if (!MONTH_RE.test(month)) notFound();
 
@@ -26,10 +28,10 @@ export default async function MonthPage({
   let setup, outflows, inflows, savings;
   try {
     [setup, outflows, inflows, savings] = await Promise.all([
-      getSetup(),
-      getOutflows(),
-      getInflows(),
-      getSavings(),
+      getSetup(username),
+      getOutflows(username),
+      getInflows(username),
+      getSavings(username),
     ]);
   } catch (e) {
     return (
@@ -51,6 +53,8 @@ export default async function MonthPage({
         monthKey={month}
         isCurrent={month === todayKey}
         todayMonthKey={todayKey}
+        user={username}
+        currency={currency}
       />
       {month !== todayKey && (
         <p className="text-xs text-zinc-500 italic mt-4">

@@ -1,13 +1,13 @@
-type,name,amount,notes
-income,Salary,5000,
-tax,Income tax,1200,
-fixed,Health insurance,180,
-fixed,Phone,35,
-fixed,iCloud,3,
-fixed,Spotify,11,
-variable,Groceries,400,monthly budget
-variable,Leisure,200,monthly budget
-variable,Miscellaneous,150,monthly budget
-variable,Laundry,30,monthly budget
-variable,Haircuts,50,monthly budget
-savings_rate,Savings rate,20,percent of net income
+user,type,name,amount,notes
+mati,income,Salary,5000,
+mati,tax,Income tax,1200,
+mati,fixed,Health insurance,180,
+mati,fixed,Phone,35,
+mati,fixed,iCloud,3,
+mati,fixed,Spotify,11,
+mati,variable,Groceries,400,monthly budget
+mati,variable,Leisure,200,monthly budget
+mati,variable,Miscellaneous,150,monthly budget
+mati,variable,Laundry,30,monthly budget
+mati,variable,Haircuts,50,monthly budget
+mati,savings_rate,Savings rate,20,percent of net income

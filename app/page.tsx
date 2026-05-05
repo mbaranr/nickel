@@ -5,21 +5,23 @@ import {
   getSetup,
 } from "@/lib/sheets";
 import { currentMonthKey, summarize } from "@/lib/budget";
+import { requireUser } from "@/lib/auth";
 import { DashboardView } from "./dashboard-view";
 import { TrackPanel } from "./track-panel";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+  const { username, currency } = await requireUser();
   const monthKey = currentMonthKey();
 
   let setup, outflows, inflows, savings;
   try {
     [setup, outflows, inflows, savings] = await Promise.all([
-      getSetup(),
-      getOutflows(),
-      getInflows(),
-      getSavings(),
+      getSetup(username),
+      getOutflows(username),
+      getInflows(username),
+      getSavings(username),
     ]);
   } catch (e) {
     return (
@@ -30,9 +32,9 @@ export default async function Home() {
         </p>
         <p className="text-sm text-zinc-500 mt-2">
           Check your <code>.env.local</code> values, that the tabs{" "}
-          <code>Setup</code>, <code>Outflows</code>, <code>Inflows</code>, and{" "}
-          <code>Savings</code> exist, and that the sheet is shared with the
-          service account.
+          <code>Users</code>, <code>Setup</code>, <code>Outflows</code>,{" "}
+          <code>Inflows</code>, and <code>Savings</code> exist, and that the
+          sheet is shared with the service account.
         </p>
       </main>
     );
@@ -50,6 +52,8 @@ export default async function Home() {
         monthKey={monthKey}
         isCurrent={true}
         todayMonthKey={monthKey}
+        user={username}
+        currency={currency}
       />
       <section className="pt-6 border-t border-black/10 dark:border-white/10">
         <h2 className="text-sm uppercase tracking-wide text-zinc-500">

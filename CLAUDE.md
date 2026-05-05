@@ -10,24 +10,33 @@ A minimal Next.js budget tracker backed by a Google Sheet.
 
 ## Data model (the Google Sheet)
 
-Four tabs:
+Five tabs:
 
-- `Setup`: declared income, taxes, fixed expenses (recurring bills and subscriptions), variable budget caps, plus one `savings_rate` row (percent of net income).
-- `Outflows`: one row per expense (date, category, amount, note).
-- `Inflows`: one row per unexpected income event (gifts, bonuses, etc.).
-- `Savings`: one row per savings transfer; positive amount = contribution, negative = withdrawal.
+- `Users`: one row per person (`username`, `password`, `currency`). Plaintext by design (minimal system). `currency` is the symbol shown next to amounts (e.g. `$`, `€`, `£`); blank defaults to `$`.
+- `Setup`: declared income, taxes, fixed expenses (recurring bills and subscriptions), variable budget caps, plus one `savings_rate` row (percent of net income). First column is `user`.
+- `Outflows`: one row per expense. Columns: `user`, `date`, `category`, `amount`, `note`.
+- `Inflows`: one row per unexpected income event. Columns: `user`, `date`, `source`, `amount`, `note`.
+- `Savings`: one row per savings transfer. Columns: `user`, `date`, `amount`, `note`. Positive amount = contribution, negative = withdrawal.
+
+Every row in `Setup`, `Outflows`, `Inflows`, `Savings` is scoped by `user`: reads filter on it, writes prepend the current user.
 
 CSV templates with the exact column layout live in `sheet-template/`.
+
+## Auth
+
+Cookie-based session. `/login` posts username + password; `loginAction` validates against the `Users` tab and sets an httpOnly cookie holding `base64(username:password)`. `getCurrentUser()` in `lib/auth.ts` decodes the cookie and re-validates against `Users` on every request, so revoking access is just deleting a row in the sheet. `requireUser()` is the page-level / action-level guard that redirects to `/login` when the cookie is missing or stale.
 
 ## Code layout
 
 - `lib/sheets.ts`: thin wrapper over the Sheets API. Returns typed rows.
 - `lib/budget.ts`: pure functions that summarize a month given fetched data.
+- `lib/auth.ts`: session cookie helpers (`getCurrentUser`, `requireUser`, `setSession`, `clearSession`).
 - `app/page.tsx`: current-month dashboard with the track form.
 - `app/m/[month]/page.tsx`: read-only past-month view.
+- `app/login/page.tsx` + `login-form.tsx`: login screen.
 - `app/dashboard-view.tsx`: shared rendering used by both pages.
 - `app/track-panel.tsx`: client component with three tabs (Outflow, Inflow, Savings).
-- `app/actions.ts`: server actions that append rows to the Sheet.
+- `app/actions.ts`: server actions for login/logout and appending rows.
 
 ## Disposable formula
 

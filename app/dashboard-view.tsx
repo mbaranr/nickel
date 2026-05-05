@@ -6,39 +6,54 @@ import {
   previousMonthKey,
   type BudgetSummary,
 } from "@/lib/budget";
-
-const CURRENCY = process.env.NEXT_PUBLIC_CURRENCY ?? "$";
-
-export function MoneyValue({ n }: { n: number }) {
-  return (
-    <span className="tabular-nums">
-      {n < 0 ? "−" : ""}
-      {CURRENCY}
-      {formatMoney(Math.abs(n))}
-    </span>
-  );
-}
+import { logoutAction } from "./actions";
 
 export function DashboardView({
   summary,
   monthKey,
   isCurrent,
   todayMonthKey,
+  user,
+  currency,
 }: {
   summary: BudgetSummary;
   monthKey: string;
   isCurrent: boolean;
   todayMonthKey: string;
+  user: string;
+  currency: string;
 }) {
   const prev = previousMonthKey(monthKey);
   const next = nextMonthKey(monthKey);
   const canGoNext = next <= todayMonthKey;
 
+  const sep = currency.length > 1 ? " " : "";
+  const fmt = (n: number) => `${currency}${sep}${formatMoney(n)}`;
+  const Money = ({ n }: { n: number }) => (
+    <span className="tabular-nums">
+      {n < 0 ? "−" : ""}
+      {fmt(Math.abs(n))}
+    </span>
+  );
+
   return (
     <>
-      <header className="flex items-baseline justify-between mb-2">
+      <header className="flex items-start justify-between mb-2">
         <h1 className="text-2xl font-semibold tracking-tight">nickel</h1>
-        <span className="text-sm text-zinc-500">{formatMonth(monthKey)}</span>
+        <div className="flex flex-col items-end gap-0.5">
+          <span className="text-sm text-zinc-500">{formatMonth(monthKey)}</span>
+          <div className="flex items-baseline gap-2 text-xs text-zinc-500">
+            <span>{user}</span>
+            <form action={logoutAction}>
+              <button
+                type="submit"
+                className="hover:text-foreground transition"
+              >
+                log out
+              </button>
+            </form>
+          </div>
+        </div>
       </header>
       <nav className="flex items-center justify-between text-xs text-zinc-500 mb-8">
         <Link
@@ -74,31 +89,24 @@ export function DashboardView({
             Disposable
           </span>
           <span className="text-3xl font-semibold">
-            <MoneyValue n={summary.disposable} />
+            <Money n={summary.disposable} />
           </span>
         </div>
         <p className="text-xs text-zinc-500 mt-2 leading-relaxed">
-          Income {CURRENCY}
-          {formatMoney(summary.income)}
+          Income {fmt(summary.income)}
           {summary.inflowsThisMonth > 0 && (
-            <>
-              {" "}
-              + Inflows {CURRENCY}
-              {formatMoney(summary.inflowsThisMonth)}
-            </>
+            <> + Inflows {fmt(summary.inflowsThisMonth)}</>
           )}{" "}
-          − Tax {CURRENCY}
-          {formatMoney(summary.taxes)} − Fixed {CURRENCY}
-          {formatMoney(summary.fixed)} − Variable {CURRENCY}
-          {formatMoney(
+          − Tax {fmt(summary.taxes)} − Fixed {fmt(summary.fixed)} − Variable{" "}
+          {fmt(
             Math.max(summary.variableBudgetTotal, summary.variableSpentTotal),
           )}
           {(summary.savingsTargetThisMonth > 0 ||
             summary.savingsActualThisMonth > 0) && (
             <>
               {" "}
-              − Savings {CURRENCY}
-              {formatMoney(
+              − Savings{" "}
+              {fmt(
                 Math.max(
                   summary.savingsTargetThisMonth,
                   summary.savingsActualThisMonth,
@@ -115,8 +123,8 @@ export function DashboardView({
             Outflows
           </h2>
           <span className="text-xs text-zinc-500">
-            <MoneyValue n={summary.variableSpentTotal} /> /{" "}
-            <MoneyValue n={summary.variableBudgetTotal} /> spent
+            <Money n={summary.variableSpentTotal} /> /{" "}
+            <Money n={summary.variableBudgetTotal} /> spent
           </span>
         </div>
         <ul className="flex flex-col gap-3">
@@ -140,7 +148,7 @@ export function DashboardView({
                     )}
                   </span>
                   <span className="text-zinc-600 dark:text-zinc-400">
-                    <MoneyValue n={c.spent} /> / <MoneyValue n={c.budget} />
+                    <Money n={c.spent} /> / <Money n={c.budget} />
                     <span
                       className={`ml-3 ${
                         over
@@ -148,7 +156,7 @@ export function DashboardView({
                           : "text-zinc-500"
                       }`}
                     >
-                      <MoneyValue n={Math.abs(c.remaining)} />{" "}
+                      <Money n={Math.abs(c.remaining)} />{" "}
                       {over ? "over" : "left"}
                     </span>
                   </span>
@@ -184,11 +192,11 @@ export function DashboardView({
         <div className="flex items-baseline justify-between text-sm mb-1">
           <span>This month</span>
           <span className="text-zinc-600 dark:text-zinc-400">
-            <MoneyValue n={summary.savingsActualThisMonth} />
+            <Money n={summary.savingsActualThisMonth} />
             {summary.savingsTargetThisMonth > 0 && (
               <>
                 {" / "}
-                <MoneyValue n={summary.savingsTargetThisMonth} />
+                <Money n={summary.savingsTargetThisMonth} />
               </>
             )}
           </span>
@@ -196,7 +204,7 @@ export function DashboardView({
         <div className="flex items-baseline justify-between text-sm">
           <span>Cumulative</span>
           <span className="font-medium">
-            <MoneyValue n={summary.savingsCumulative} />
+            <Money n={summary.savingsCumulative} />
           </span>
         </div>
       </section>
@@ -216,7 +224,7 @@ export function DashboardView({
                   )}
                 </span>
                 <span className="text-zinc-600 dark:text-zinc-400">
-                  <MoneyValue n={i.amount} />
+                  <Money n={i.amount} />
                 </span>
               </li>
             ))}
