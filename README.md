@@ -1,6 +1,6 @@
 # nickel
 
-A minimal web app for tracking monthly budgets.
+A minimal web app for tracking my monthly budget.
 
 ## What it does
 
